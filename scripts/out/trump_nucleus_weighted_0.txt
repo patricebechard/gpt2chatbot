@@ -1,0 +1,21 @@
+PROMPT :
+Donald Trump will resign the presidency in 2019 in exchange for immunity for him and his family, former Bush adviser says.
+
+COMPLETION : 
+<|endoftext|>In this post we look into using a custom CSS Grid as part of a project. You can check out more about how CSS Grid Works for our tutorial below, as well as check out this great tutorial that describes using HTML 5, CSS Grid & Sass as an example to illustrate what happens if we create an HTML, CSS or SVG Grid as we did before, by clicking this Link!
+
+
+We need the following code as shown in Figure 2 to illustrate what can be created, using an HTML 5 & SVG grid. We're assuming an initial setup of this CSS. In reality the same can work with just an HTML5 CSS. You need some sort of markup and styling for that HTML Grid in addition. This CSS would create a list for that specific article on The Atlantic. So how do we use it, using JavaScript as you saw below?
+
+We need a simple HTML to CSS file that looks like shown below
+
+.column.title "1 2".span { padding: 8px 0 8px 8px 0 }.column.row span { text-align: left; }
+
+We want it to span to each row within a row span, or we use div to do it in JavaScript (and the code shown in our tutorial would be very similar), if not it can still use something like jQuery as an inline wrapper and you might use this CSS instead!
+
+Let us break this apart by setting the widths to be a single column with one span. Also note how in this code the "column" attribute on each span, can now span into columns of your choice as seen on our first tutorial in a series that follows in detail. This would result in us with 2 column spans within 1 column row with the column and span, but with more rows in total as we need each one as its own section with each one in its own section of that span as shown.
+
+
+This looks really good to work, with the grid, so we should just create a grid of columns like that! If so you've used our tutorials on using jQuery & HTML Grid before? Good news, I'm now giving a little walk through that walk thru to go over everything that you can expect if you have used any of my CSS tutorials from my last tutorial, and will use that when writing my tutorials now for our tutorials as well as in this new article we have in our blog. You're free to go as wild or not you are, or just make this code, I would say make sure to follow all the step by step steps! The walkthrough will get more elaborate with use but if that sounds a little daunting let us see the examples, I would highly recommend this one for beginners too, by using the code shown here to get this demo set up on our web server (if the grid looks right on it):
+
+// create grid <div class=".container-grid"></div> // define columns and the width and heights // we need 1 row & a 3x3 block (with each row & column span having one line for their text and text position), so our // grid looks this way: // div.colspan{ float:right;}.span{ position: absolute; text-align: left } /* // define text positions to span from // 1 line of each column to span to within one div line, to the span in question * 1 row and one 2 div div div.colspan span.first.first * // set up columns that are 1 and 3 (using an extra column to fill an empty 1 or 1 div ) 1 1 span 1 * 2 3 * * 1 */ // set each column on one row, for that span 2 row 2 3 span { padding-bottom: 8px 8px 4px 2; width: auto; /* 2 line */ border-bottom-bottom-width: 8px 8px 10px 4; height: 50px } * 2 * 4
