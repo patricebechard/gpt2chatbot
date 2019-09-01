@@ -8,8 +8,8 @@ from pytorch_transformers import GPT2Tokenizer, GPT2LMHeadModel
 logging.basicConfig(level=logging.INFO)
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-NUM_TOKENS_TO_GENERATE = 100
-K_VALUE = 10
+NUM_TOKENS_TO_GENERATE = 1000
+K_VALUE = 25
 P_VALUE = 0.01
 
 
@@ -20,23 +20,42 @@ def greedy_decode(prediction_scores):
     return torch.argmax(prediction_scores).cpu().item()
 
 
-def top_k_decode(prediction_scores, k=10):
+def top_k_decode(prediction_scores, k=10, weighted=False):
     """
     We sample uniformly from the k words with top probability.
+    :param prediction_scores: torch tensor prediction scores before decoding
+    :param k: int number of words to sample from, default=10
+    :param weighted: bool, if True, sample from top k prob distribution
+
+    :returns: choice, word sampled from prediction scores
     """
     values, indexes = torch.topk(prediction_scores, k=k)
-    choice = indexes[torch.randint(0, indexes.size(0), (1,))].cpu().item()
+    if weighted:
+        probs = Categorical(logits=values)
+        choice = indexes[probs.sample()].cpu().item()
+    else:
+        choice = indexes[torch.randint(0, indexes.size(0), (1,))].cpu().item()
     return choice
 
 
-def nucleus_decode(prediction_scores, p=0.02):
+def nucleus_decode(prediction_scores, p=0.02, weighted=False):
     """
     We sample uniformly from words with probability > p.
+    :param prediction_scores: torch tensor prediction scores before decoding
+    :param p: int minimum prob of words to keep, default=0.02
+    :param weighted: bool, if True, categorical sample from top p prob distribution, if False, sample uniformly.
+
+    :returns: choice, word sampled from prediction scores
     """
     prediction_probs = F.softmax(prediction_scores, dim=0)
     indexes = torch.nonzero(prediction_probs >= p).flatten()
-    choice = indexes[torch.randint(0, indexes.size(0), (1,))].cpu().item()
+    if weighted:
+        probs = Categorical(logits=prediction_probs[indexes])
+        choice = indexes[probs.sample()].cpu().item()
+    else:
+        choice = indexes[torch.randint(0, indexes.size(0), (1,))].cpu().item()
     return choice
+
 
 def categorical_decode(prediction_scores):
     """
@@ -54,7 +73,7 @@ if __name__ == "__main__":
     model = GPT2LMHeadModel.from_pretrained("gpt2").to(DEVICE)
 
     # prompt = input("Enter a prompt : ")
-    prompt = "the blue cat is yellow"
+    prompt = "In an unexpected turn of events, president Donald Trump has announced that he will be resigning from office."
     prompt = tokenizer.encode(prompt)
 
     with torch.no_grad():
@@ -70,7 +89,9 @@ if __name__ == "__main__":
             # prediction = greedy_decode(next_word_prediction_scores)
             # prediction = top_k_decode(next_word_prediction_scores, k=K_VALUE)
             # prediction = nucleus_decode(next_word_prediction_scores, p=P_VALUE)
-            prediction = categorical_decode(next_word_prediction_scores)
+            # prediction = categorical_decode(next_word_prediction_scores)
+            # prediction = top_k_decode(next_word_prediction_scores, k=K_VALUE, weighted=True)
+            prediction = nucleus_decode(next_word_prediction_scores, p=P_VALUE, weighted=True)
             prompt.append(prediction)
 
     # convert prompt to full string
